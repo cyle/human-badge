@@ -18,3 +18,9 @@ Future plans:
 - A small screen to display your status and icon and who you've recently been pinged by.
 - Some switches to turn on/off the display and radio.
 - A proper custom PCB for everything!
+
+## Resources
+
+- [Radio module tutorial](https://www.deviceplus.com/how-tos/arduino-guide/nrf24l01-rf-module-tutorial/)
+- [RadioHead driver docs](http://www.airspayce.com/mikem/arduino/RadioHead/classRH__RF24.html)
+- [Another tutorial for this radio](https://www.instructables.com/id/Wireless-Remote-Using-24-Ghz-NRF24L01-Simple-Tutor/)
