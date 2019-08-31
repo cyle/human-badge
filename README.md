@@ -9,7 +9,7 @@ The overall idea is to make a badge (kind of like the Defcon 27 badge) that inte
 The basic features include right now:
 
 - An Arduino Nano v3 powering everything.
-- An nRF24L01+ RF module that talks over 2.4GHz to other badges within range.
+- An NRF24L01+ RF module that talks over 2.4GHz to other badges within range.
 - An RGB LED that visually displays the current status of the badge.
 - A little piezo speaker that beeps when a pulse is sent and plays a series of tones when one is received.
 
@@ -18,6 +18,27 @@ Future plans:
 - A small screen to display your status and icon and who you've recently been pinged by.
 - Some switches to turn on/off the display and radio.
 - A proper custom PCB for everything!
+
+## Code Requirements
+
+- Arduino IDE 1.8.9
+- [RadioHead library](http://www.airspayce.com/mikem/arduino/RadioHead/)
+
+## Physical Setup
+
+If you want to breadboard it:
+
+- Strap in your Arduino Nano v3 to a breadboard, and I put 3v3 (not 5v) and ground into the breadboard bus.
+- Connecting the radio to your Arduino digital pins and whatnot is in the below tutorials, I'm using digital pin 2 for the IRQ pin (which is usually absent from the tutorials but seems to be required?).
+- Piezo speaker goes from digital pin 8 to a 100 ohm resistor and then to positive on the speaker, ground on the speaker goes to ground.
+- I'm using common cathode RGB LED, so the longest pin goes to ground.
+  - Red pin is the single one next to the longest pin, goes to a 330 ohm resistor then digital pin 6.
+  - On the other side of the longest pin, next is green, goes to a 330 ohm resistor then digital pin 5.
+  - Last is blue, goes to a 330 ohm resistor then digital pin 3.
+
+You should be able to hook up your Arduino Nano to your computer via USB and upload the sketch.
+
+You'll need at least two setups to get the actual functionality of the thing, of course, so there's someone else for your badge to talk to.
 
 ## Resources
 
