@@ -11,6 +11,9 @@ The basic features include right now:
 - An Arduino Nano v3 powering everything.
 - An NRF24L01+ RF module that talks over 2.4GHz to other badges within range.
 - An RGB LED that visually displays the current status of the badge.
+  - Purple means it's listening for pulses.
+  - Red means it's received a pulse. (You can see the message when using Arduino IDE's Serial Monitor.)
+  - Green means it's sent a pulse. (You can see the message being sent when using Arduino IDE's Serial Monitor.)
 - A little piezo speaker that beeps when a pulse is sent and plays a series of tones when one is received.
 
 Future plans:
