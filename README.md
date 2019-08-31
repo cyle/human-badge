@@ -4,7 +4,7 @@ The "HUMAN BADGE" is my attempt at a Defcon/tech electronic badge that does some
 
 This is v0 because I'm still prototyping everything.
 
-The overall idea is to make a badge (kind of like the Defcon 27 badge) that interacts with other badges. A kind of hackable Nintendo StreetPass. Your badge is either sending or listening for pulses, and those pulses can contain a little bit of info about you.
+The overall idea is to make a badge (kind of like [the amazing Defcon 27 badge](http://www.grandideastudio.com/defcon-27-badge/)) that interacts with other badges. A kind of hackable Nintendo StreetPass. Your badge is either sending or listening for pulses, and those pulses can contain a little bit of info about you, or whatever you want. Receivers can see these things on their badge as they get them and look em up later.
 
 The basic features include right now:
 
@@ -16,13 +16,18 @@ The basic features include right now:
 Future plans:
 
 - A small screen to display your status and icon and who you've recently been pinged by.
-- Some switches to turn on/off the display and radio.
+- Some switches to turn on/off the display and radio to save battery.
+- A battery of some kind, lol. Maybe a something that can be recharged via USB.
+- Some non-volatile memory so you can access who you've connected with.
+- A serial terminal connection to the badge itself so you can set up what you want to send, and download what you've got.
 - A proper custom PCB for everything!
 
 ## Code Requirements
 
 - Arduino IDE 1.8.9
 - [RadioHead library](http://www.airspayce.com/mikem/arduino/RadioHead/)
+
+Debugging via serial is essential. It'll tell you what you wanna know at 9600 baud.
 
 ## Physical Setup
 
