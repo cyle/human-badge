@@ -15,10 +15,11 @@ The basic features include right now:
   - Red means it's received a pulse. (You can see the message when using Arduino IDE's Serial Monitor.)
   - Green means it's sent a pulse. (You can see the message being sent when using Arduino IDE's Serial Monitor.)
 - A little piezo speaker that beeps when a pulse is sent and plays a series of tones when one is received.
+- A 1.3" square 240x240 display.
 
 Future plans:
 
-- A small screen to display your status and icon and who you've recently been pinged by.
+- The screen should display your status and icon and who you've recently been pinged by.
 - Some switches to turn on/off the display and radio to save battery.
 - A battery of some kind, lol. Maybe a something that can be recharged via USB.
 - Some non-volatile memory so you can access who you've connected with.
@@ -29,6 +30,7 @@ Future plans:
 
 - Arduino IDE 1.8.9
 - [RadioHead library](http://www.airspayce.com/mikem/arduino/RadioHead/)
+- Adafruit GFX, Zero DMA, ST7735 and ST7789, SPIFlash, and SdFat - Adafruit Fork libraries, via Arduino IDE's package manager.
 
 Debugging via serial is essential. It'll tell you what you wanna know at 9600 baud.
 
@@ -43,6 +45,7 @@ If you want to breadboard it:
   - Red pin is the single one next to the longest pin, goes to a 330 ohm resistor then digital pin 6.
   - On the other side of the longest pin, next is green, goes to a 330 ohm resistor then digital pin 5.
   - Last is blue, goes to a 330 ohm resistor then digital pin 3.
+- The display shares pins 11, 12, and 13 with the radio, and I'm using pin A0 for TCS, A1 for RST, and A2 for D/C.
 
 You should be able to hook up your Arduino Nano to your computer via USB and upload the sketch.
 
@@ -53,3 +56,5 @@ You'll need at least two setups to get the actual functionality of the thing, of
 - [Radio module tutorial](https://www.deviceplus.com/how-tos/arduino-guide/nrf24l01-rf-module-tutorial/)
 - [RadioHead driver docs](http://www.airspayce.com/mikem/arduino/RadioHead/classRH__RF24.html)
 - [Another tutorial for this radio](https://www.instructables.com/id/Wireless-Remote-Using-24-Ghz-NRF24L01-Simple-Tutor/)
+- [Adafruit GFX library reference and guide](https://learn.adafruit.com/adafruit-gfx-graphics-library)
+- [Adafruit 1.3" display guide](https://learn.adafruit.com/adafruit-1-3-and-1-54-240-x-240-wide-angle-tft-lcd-displays)
