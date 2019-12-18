@@ -30,6 +30,9 @@ const int piezoPin = 9;
 const int potPin = A5;
 int potValue = 0; // variable to store the value coming from the pot
 
+// this pin reads the state of the switch
+const int switchPin = 4;
+
 /**
  * Some notes about SPI since this has two SPI devices...
  * pin 8 on nano goes to CE on radio
@@ -65,10 +68,13 @@ void setup() {
   // get our piezo speaker pin in order
   pinMode(piezoPin, OUTPUT);
 
+  // get our switch pin in order
+  pinMode(switchPin, INPUT);
+
   #ifdef HAS_DISPLAY
   // initialize the ST7789 display, 240x240
   tft.init(240, 240);
-  drawText("Initializing...", ST77XX_WHITE);
+  drawText("INIT\nTIME\nLOL\nHELLO", ST77XX_WHITE);
   #endif
 
   // initialize the radio
@@ -100,9 +106,32 @@ void setup() {
 void loop() {
   Serial.println("START OF NEW LOOP!");
 
+  int switchValue = digitalRead(switchPin);
+  Serial.print("switch state: ");
+  Serial.println(switchValue);
+
+  // check the state of the switch
+  if (switchValue == 1) {
+    // we are in TERMINAL MODE!!!!
+    terminalOperations();
+  } else {
+    sendReceiveOperations();
+  }
+
+  Serial.println("END OF LOOP!");
+}
+
+void terminalOperations() {
+  Serial.println("we are in TERMINAL MODE!!!!");
+  drawText(" xxx \nTERMINAL\nMODE\nACTIVE\n xxx ", ST77XX_BLUE);
+  setColor(0, 0, 255); // blue light!
+  delay(1000);
+}
+
+void sendReceiveOperations() {
   // code for sending a message
   if (SEND_MODE) {
-    drawText("Sending pulse...", ST77XX_GREEN);
+    drawText("Sending\npulse...", ST77XX_GREEN);
     Serial.print("Sending a message: ");
     setColor(0, 255, 0); // green light!
     
@@ -142,7 +171,7 @@ void loop() {
     // using nrf24.available() waits indefinitely for a message
     long milliseconds = round((potValue / 1024.0) * MAX_RECEIVE_WAIT_TIME); // note the .0s to convert to floats
     // long milliseconds = random(5000, 15000);
-    drawText("Listening for pulses...", ST77XX_BLUE);
+    drawText("Listening for pulses...", ST77XX_MAGENTA);
     Serial.print("Milliseconds to wait for the next message: ");
     Serial.println(milliseconds);
     setColor(80, 0, 80); // purple!
@@ -151,7 +180,7 @@ void loop() {
       uint8_t buf[RH_NRF24_MAX_MESSAGE_LEN]; // allocate the max length to start
       uint8_t len = sizeof(buf);
       if (nrf24.recv(buf, &len)) {
-        drawText("Got a message!", ST77XX_RED);
+        drawText("Got a \nmessage!", ST77XX_RED);
         Serial.print("!!!! Received a message: ");
         Serial.println((char*) buf);
         setColor(255, 0, 0); // red!
@@ -173,8 +202,6 @@ void loop() {
   } else {
     Serial.println("Not in receive mode, so not receiving.");
   }
-
-  Serial.println("END OF LOOP!");
 }
 
 /**
