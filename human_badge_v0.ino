@@ -12,6 +12,9 @@ RH_NRF24 nrf24;
 // do you want this to be trying to receive pulses on every loop?
 #define RECEIVE_MODE true
 
+// the maximum receive wait timeout, in milliseconds, note the .0 to make it a float
+#define MAX_RECEIVE_WAIT_TIME 15000.0
+
 // this'll hold this instance's random identifier, generated at power on
 String my_id;
 
@@ -22,6 +25,10 @@ const int bluePin = 3;
 
 // where our little piezo speaker is
 const int piezoPin = 9;
+
+// where our 10kohm potentiometer is, expects to be on 5V
+const int potPin = A5;
+int potValue = 0; // variable to store the value coming from the pot
 
 /**
  * Some notes about SPI since this has two SPI devices...
@@ -119,18 +126,27 @@ void loop() {
     tone(piezoPin, 880, 200);
     delay(400);
     setColor(0, 0, 0);
+  } else {
+    Serial.println("Not in send mode, so not sending.");
   }
-  
-  // code for receiving a message
-  if (RECEIVE_MODE) {
+
+  // read the value of the potentiometer
+  potValue = analogRead(potPin);
+  Serial.print("got knob value: ");
+  Serial.println(potValue); // if a 10kohm pot is given 5v, this should be between 0 and 1024
+
+  // code for receiving a message, only use if RECEIVE_MODE is true,
+  // and if the knob has been turned up enough to be receiving things
+  if (RECEIVE_MODE && potValue > 100) {
     // this waits X milliseconds or until a message is received, whatever is first
     // using nrf24.available() waits indefinitely for a message
-    long seconds = random(5000, 15000);
+    long milliseconds = round((potValue / 1024.0) * MAX_RECEIVE_WAIT_TIME); // note the .0s to convert to floats
+    // long milliseconds = random(5000, 15000);
     drawText("Listening for pulses...", ST77XX_BLUE);
-    Serial.print("Seconds to wait for the next message: ");
-    Serial.println(seconds);
+    Serial.print("Milliseconds to wait for the next message: ");
+    Serial.println(milliseconds);
     setColor(80, 0, 80); // purple!
-    if (nrf24.waitAvailableTimeout(seconds)) { 
+    if (nrf24.waitAvailableTimeout(milliseconds)) { 
       // if the above code block passed, then we have a message
       uint8_t buf[RH_NRF24_MAX_MESSAGE_LEN]; // allocate the max length to start
       uint8_t len = sizeof(buf);
@@ -154,6 +170,8 @@ void loop() {
     }
     
     setColor(0, 0, 0);
+  } else {
+    Serial.println("Not in receive mode, so not receiving.");
   }
 
   Serial.println("END OF LOOP!");
