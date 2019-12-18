@@ -1,7 +1,10 @@
 #include <SPI.h>
 #include <RH_NRF24.h>
-#include <Adafruit_GFX.h>    // Core graphics library
+#include <Adafruit_GFX.h> // Core display graphics library
 #include <Adafruit_ST7789.h> // Hardware-specific library for ST7789
+
+// some colors to use for the screen are here:
+// https://github.com/adafruit/Adafruit-ST7735-Library/blob/master/Adafruit_ST77xx.h#L77-L86
 
 // Singleton instance of the radio driver
 RH_NRF24 nrf24;
@@ -28,7 +31,6 @@ const int piezoPin = 9;
 
 // where our 10kohm potentiometer is, expects to be on 5V
 const int potPin = A5;
-int potValue = 0; // variable to store the value coming from the pot
 
 // this pin reads the state of the switch
 const int switchPin = 4;
@@ -37,7 +39,7 @@ const int switchPin = 4;
  * Some notes about SPI since this has two SPI devices...
  * pin 8 on nano goes to CE on radio
  * pin 10 on nano goes to CSN on radio
- * no IRQ pin is needed for radio, leave it off
+ * no IRQ pin is needed for radio, leave it off, nevermind this
  * SPI MOSI pin on nano is 11, shared by radio + display
  * SPI MISO pin on nano is 12, shared by radio + display
  * SPI clock (SCK) pin on nano is 13, shared by radio + display
@@ -47,6 +49,8 @@ const int switchPin = 4;
 #define TFT_CS 14
 #define TFT_RST 15
 #define TFT_DC 16
+
+// comment this next line out if you don't actually have a display connected
 #define HAS_DISPLAY
 
 #ifdef HAS_DISPLAY
@@ -112,7 +116,6 @@ void loop() {
 
   // check the state of the switch
   if (switchValue == 1) {
-    // we are in TERMINAL MODE!!!!
     terminalOperations();
   } else {
     sendReceiveOperations();
@@ -121,6 +124,10 @@ void loop() {
   Serial.println("END OF LOOP!");
 }
 
+/**
+ * The "terminal" operations when in this mode.
+ * Expects you to have a serial connection to the device so you can interact.
+ */
 void terminalOperations() {
   Serial.println("we are in TERMINAL MODE!!!!");
   drawText(" xxx \nTERMINAL\nMODE\nACTIVE\n xxx ", ST77XX_BLUE);
@@ -128,6 +135,10 @@ void terminalOperations() {
   delay(1000);
 }
 
+/**
+ * Normal send/receive of pulses with other devices.
+ * Just needs power running to it in this mode.
+ */
 void sendReceiveOperations() {
   // code for sending a message
   if (SEND_MODE) {
@@ -159,8 +170,8 @@ void sendReceiveOperations() {
     Serial.println("Not in send mode, so not sending.");
   }
 
-  // read the value of the potentiometer
-  potValue = analogRead(potPin);
+  // read the value of the potentiometer, which will control the receive timeout
+  int potValue = analogRead(potPin);
   Serial.print("got knob value: ");
   Serial.println(potValue); // if a 10kohm pot is given 5v, this should be between 0 and 1024
 
