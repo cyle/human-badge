@@ -15,19 +15,19 @@ RH_NRF24 nrf24;
 // this'll hold this instance's random identifier, generated at power on
 String my_id;
 
-// uncomment this line if using a Common Anode RGB LED (meaning the longest pin is positive, not negative)
-// #define COMMON_ANODE
-
 // these define the digital/PWM pins for the RGB LED
 const int redPin = 6;
 const int greenPin = 5;
 const int bluePin = 3;
 
 // where our little piezo speaker is
-const int piezoPin = 8;
+const int piezoPin = 9;
 
 /**
  * Some notes about SPI since this has two SPI devices...
+ * pin 8 on nano goes to CE on radio
+ * pin 10 on nano goes to CSN on radio
+ * no IRQ pin is needed for radio, leave it off
  * SPI MOSI pin on nano is 11, shared by radio + display
  * SPI MISO pin on nano is 12, shared by radio + display
  * SPI clock (SCK) pin on nano is 13, shared by radio + display
@@ -37,9 +37,12 @@ const int piezoPin = 8;
 #define TFT_CS 14
 #define TFT_RST 15
 #define TFT_DC 16
+#define HAS_DISPLAY
 
+#ifdef HAS_DISPLAY
 // create our display singleton
 Adafruit_ST7789 tft = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_RST);
+#endif
 
 /**
  * It's the setup function, where we set things up on power on.
@@ -55,21 +58,23 @@ void setup() {
   // get our piezo speaker pin in order
   pinMode(piezoPin, OUTPUT);
 
+  #ifdef HAS_DISPLAY
   // initialize the ST7789 display, 240x240
   tft.init(240, 240);
   drawText("Initializing...", ST77XX_WHITE);
+  #endif
 
   // initialize the radio
   if (!nrf24.init()) {
     Serial.println("radio init failed");
   }
   
-  // Defaults after init are 2.4 GHz (channel 7), 2Mbps, 0dBm
-  if (!nrf24.setChannel(7)) {
+  // Defaults after init are 2.4 GHz (channel 1), 2Mbps, 0dBm
+  if (!nrf24.setChannel(76)) {
     Serial.println("radio setChannel failed");
   }
   
-  if (!nrf24.setRF(RH_NRF24::DataRate2Mbps, RH_NRF24::TransmitPower0dBm)) {
+  if (!nrf24.setRF(RH_NRF24::DataRate250kbps, RH_NRF24::TransmitPower0dBm)) {
     Serial.println("radio setRF failed");
   }
 
@@ -158,11 +163,6 @@ void loop() {
  * Helper function to set the color of the RGB LED.
  */
 void setColor(int red, int green, int blue) {
-  #ifdef COMMON_ANODE
-    red = 255 - red;
-    green = 255 - green;
-    blue = 255 - blue;
-  #endif
   analogWrite(redPin, red);
   analogWrite(greenPin, green);
   analogWrite(bluePin, blue);  
@@ -172,10 +172,12 @@ void setColor(int red, int green, int blue) {
  * Helper function to draw some text on the display.
  */
 void drawText(char *text, uint16_t color) {
+  #ifdef HAS_DISPLAY
   tft.fillScreen(ST77XX_BLACK);
   tft.setCursor(0, 0);
   tft.setTextColor(color);
   tft.setTextSize(4);
   tft.setTextWrap(true);
   tft.print(text);
+  #endif
 }
