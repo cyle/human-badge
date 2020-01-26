@@ -1,5 +1,7 @@
 # Human Badge v0
 
+NOTE: This version of the badge is now deprecated; please see the Feather M0 version here: https://github.com/cyle/human-badge-feather
+
 The "HUMAN BADGE" is my attempt at a Defcon/tech electronic badge that does some neat things, especially when it's around other badges.
 
 This is v0 because I'm still prototyping everything.

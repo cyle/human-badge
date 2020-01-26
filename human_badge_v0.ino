@@ -49,6 +49,7 @@ const int switchPin = 4;
 #define TFT_CS 14
 #define TFT_RST 15
 #define TFT_DC 16
+#define TFT_CCS 17
 
 // comment this next line out if you don't actually have a display connected
 #define HAS_DISPLAY
